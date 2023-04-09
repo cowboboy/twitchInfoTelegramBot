@@ -5,6 +5,9 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher.filters import Text
 from keyboards import kb_client
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from data_base import sqlite
+
 class FSMStreamer(StatesGroup):
     """
     Получает имя стримера и выводит информацию по нему
@@ -35,7 +38,11 @@ class FSMRating(StatesGroup):
     condition = State()
 
 async def rating_start(message : types.Message):
-    await bot.send_message(message.from_user.id, "Выберите признак составления рейтинга:", reply_markup=kb_client.kb_ratingConditions)
+    conditions = await sqlite.get_colums()
+    kb_ratingConditions = ReplyKeyboardMarkup(resize_keyboard=True)
+    for condition in conditions:
+        kb_ratingConditions.insert(KeyboardButton(str(condition)))
+    await bot.send_message(message.from_user.id, "Выберите признак составления рейтинга:", reply_markup=kb_ratingConditions)
     await message.delete()
     await FSMRating.condition.set()
 
