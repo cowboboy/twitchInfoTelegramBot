@@ -1,6 +1,6 @@
 import sqlite3 as sq
 
-def create_table():
+def create_db():
     global base, cur
     base = sq.connect("my_data_base.db")
     cur = base.cursor()
