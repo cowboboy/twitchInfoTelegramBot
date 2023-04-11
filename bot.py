@@ -1,14 +1,12 @@
-from create_bot import bot, dp
+from create_bot import bot, dp, service
 from aiogram import executor
-from data_base import sqlite
-from processor import dataprocessor_service
 
 async def on_startup(_):
+    global connection
     print("[BOT] Connected.")
-    sqlite.create_db()
     try:
-        dataprocessor_service.DataProcessorService("twitchdata-update.csv").run_service()
-        print("[DataProcessor] Connected.")
+        service.run_service()
+        #print("[DataProcessor] Connected.")
     except:
         print("[DataProcessor] Failed.")
 

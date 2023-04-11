@@ -1,12 +1,11 @@
 from aiogram import types
-from create_bot import bot
+from create_bot import bot, connection
 from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher.filters import Text
 from keyboards import kb_client
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
-from data_base import sqlite
 
 class FSMStreamer(StatesGroup):
     """
@@ -38,7 +37,7 @@ class FSMRating(StatesGroup):
     condition = State()
 
 async def rating_start(message : types.Message):
-    conditions = await sqlite.get_colums()
+    conditions = []
     kb_ratingConditions = ReplyKeyboardMarkup(resize_keyboard=True)
     for condition in conditions:
         kb_ratingConditions.insert(KeyboardButton(str(condition)))
