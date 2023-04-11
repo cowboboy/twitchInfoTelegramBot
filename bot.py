@@ -1,4 +1,4 @@
-from create_bot import bot, dp, service
+from create_bot import bot, dp, service, connection
 from aiogram import executor
 
 async def on_startup(_):

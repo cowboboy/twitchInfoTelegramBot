@@ -5,8 +5,8 @@ create table source_files (
 );
 
 create table streamers (
-	id integer PRIMARY KEY autoincrement,
-	name varchar(255) NOT NULL,
+	id integer autoincrement,
+	name varchar(255) PRIMARY KEY NOT NULL,
 	viewingTime integer,
 	airTime integer,
     peakViews integer,
