@@ -1,4 +1,5 @@
 import sqlite3 as sq
+from datetime import datetime
 
 def create_db():
     global base, cur
@@ -15,6 +16,10 @@ def create_db():
 async def get_row_by_name(name: str) -> list:
     cur.execute("SELECT name, viewingTime, airTime, peakViews, averageVies, subscribers FROM streamers WHERE name = ?", name)
     return cur.fetchall()
+
+async def add_file(name: str) -> None:
+    cur.execute("INSERT INTO files VALUES (?, ?)", (name, datetime.now().strftime("%Y-%M-%D %I:%M%p")))
+    base.commit()
 
 async def get_colums() -> list:
     result = []

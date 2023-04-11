@@ -33,6 +33,8 @@ class DataProcessor(ABC):
         # удаляем ненужные колонки из входного набора данных
         self.result = self.remove_col_by_name(self._dataset, ["Followers gained","Views gained","Partnered", \
                                                                  "Mature", "Language"])
+        self.result = self.sort_data_by_col(self.result, "Followers", False)
+        sqlite.add_file(self._datasource)
 
     def to_db(self):
         self.result.to_sql("streamers", sqlite.base, if_exists="replace")
@@ -110,8 +112,9 @@ class CsvDataProcessor(DataProcessor):
             print(e)
         return False
 
-    def print_result(self):
-        print(f'Running CSV-file processor!\n', self.result)
+    def print_result(self) -> None:
+        print(f'Before CSV-file processor!\n', self._dataset)
+        print('After CSV-file processor!\n', self.result)
 
 
 class TxtDataProcessor(DataProcessor):
