@@ -20,7 +20,10 @@ async def streamer_start(message : types.Message):
 async def get_name(message : types.Message, state : FSMContext):
     await state.update_data(name=message.text)
     data = await state.get_data()
-    await bot.send_message(message.from_user.id, f"Стример {data['name']} был найден.", reply_markup=kb_client.kb_menu)
+    response = "Нет данных"
+    if connection.get_row_by_name(data['name']) is not None:
+        response = ", ".join(map(str, list(connection.get_row_by_name(data['name']))))
+    await bot.send_message(message.from_user.id, response, reply_markup=kb_client.kb_menu)
     await state.finish()
 
 async def cancel_streamer(message : types.Message, state : FSMContext):
@@ -37,7 +40,7 @@ class FSMRating(StatesGroup):
     condition = State()
 
 async def rating_start(message : types.Message):
-    conditions = []
+    conditions = ["viewingTime", "airTime", "peakViews", "averageVies", "subscribers"]
     kb_ratingConditions = ReplyKeyboardMarkup(resize_keyboard=True)
     for condition in conditions:
         kb_ratingConditions.insert(KeyboardButton(str(condition)))
@@ -48,7 +51,12 @@ async def rating_start(message : types.Message):
 async def get_condition(message : types.Message, state : FSMContext):
     await state.update_data(condition=message.text)
     data = await state.get_data()
-    await bot.send_message(message.from_user.id, f"Статистика по условию {data['condition']}: ...", reply_markup=kb_client.kb_menu)
+    result = ""
+    streamers = list(connection.get_rating_by_field(str(data['condition'])))
+    for row in streamers:
+        result += ", ".join(map(str, row))
+        result += '\n'
+    await bot.send_message(message.from_user.id, result, reply_markup=kb_client.kb_menu)
     await state.finish()
 
 async def cancel_rating(message : types.Message, state : FSMContext):
