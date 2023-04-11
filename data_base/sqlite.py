@@ -7,13 +7,10 @@ def create_db():
     if base:
         print("[DATABASE] Connected.")
     base.execute("CREATE TABLE IF NOT EXISTS streamers(name TEXT PRIMARY_KEY, viewingTime REAL, airTime TEXT,  \
-                 peakViews INTEGER, averageVies INTEGER, subscribers INTEGER)")
+                 peakViews INTEGER, averageVies INTEGER, subscribers INTEGER, FOREIGN KEY (file_id)  REFERENCES files (id))")
     base.commit()
-
-async def sql_add_command(state):
-    async with state.proxy() as data:
-        cur.execute("INSERT INTO menu VALUES (?, ?, ?, ?)", tuple(data.values()))
-        base.commit()
+    base.execute("CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY_KEY AUTOINCREMENT, name TEXT, date_time TEXT)")
+    base.commit()
 
 async def get_row_by_name(name: str) -> list:
     cur.execute("SELECT name, viewingTime, airTime, peakViews, averageVies, subscribers FROM streamers WHERE name = ?", name)
