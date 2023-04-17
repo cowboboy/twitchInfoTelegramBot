@@ -6,7 +6,7 @@ async def on_startup(_):
     print("[BOT] Connected.")
     try:
         service.run_service()
-        #print("[DataProcessor] Connected.")
+        print("[DataProcessor] Connected.")
     except:
         print("[DataProcessor] Failed.")
 
